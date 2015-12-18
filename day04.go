@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"strconv"
 )
 
 func CheckPrefix(s *[md5.Size]byte) bool {
@@ -34,7 +35,7 @@ func Day04(input io.Reader) {
 	var coin, coin1 int
 	coinFound := false
 	for i := 0; ; i++ {
-		data := append(key, fmt.Sprintf("%d", i)...)
+		data := append(key, strconv.Itoa(i)...)
 		sum := md5.Sum(data)
 		if !coinFound {
 			if CheckPrefix(&sum) {
