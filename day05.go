@@ -69,6 +69,38 @@ func IsNice1(s string) bool {
 	return false
 }
 
+// IsNice2 is equivalent to IsNice1, but it's cleaner and a bit more
+// general.
+func IsNice2(s string) bool {
+	const seqLen = 2
+	const repSkip = 1
+	seqs := make(map[string]int)
+	seqFound, repFound := false, false
+	rv := []rune(s)
+	for i := 0; i < len(rv); i++ {
+		if !seqFound && i <= len(rv)-seqLen {
+			sq := string(rv[i : i+seqLen])
+			idx, ok := seqs[sq]
+			if ok {
+				if i-idx >= seqLen {
+					seqFound = true
+				}
+			} else {
+				seqs[sq] = i
+			}
+		}
+		if !repFound && i > repSkip {
+			if rv[i] == rv[i-repSkip-1] {
+				repFound = true
+			}
+		}
+		if seqFound && repFound {
+			return true
+		}
+	}
+	return false
+}
+
 func Day05(input io.Reader) {
 	sc := bufio.NewScanner(input)
 	nice, nice1 := 0, 0
@@ -77,7 +109,7 @@ func Day05(input io.Reader) {
 		if IsNice(str) {
 			nice++
 		}
-		if IsNice1(str) {
+		if IsNice2(str) {
 			nice1++
 		}
 	}
